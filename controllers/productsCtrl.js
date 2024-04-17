@@ -7,10 +7,11 @@ import Product from "../model/Product.js";
 // @route   POST /api/v1/products
 // @access  Private/Admin
 export const createProductCtrl = asyncHandler(async (req, res) => {
-  console.log(req.body);
   const { name, description, category, sizes, colors, price, totalQty, brand } =
     req.body;
+  console.log(req.body);
   const convertedImgs = req.files.map((file) => file?.path);
+
   //Product exists
   const productExists = await Product.findOne({ name });
   if (productExists) {
