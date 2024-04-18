@@ -1,7 +1,7 @@
 {
-  "name": "nodejs-ecommerce-api",
+  "name": "institute-api",
   "version": "1.0.0",
-  "description": "NodeJS E-commerce API",
+  "description": "institute API",
   "main": "server.js",
   "type": "module",
   "scripts": {
@@ -12,7 +12,7 @@
     "API",
     "NodeJS"
   ],
-  "author": "I-Novotek Academy",
+  "author": "Zahid Mahmood",
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^2.4.3",

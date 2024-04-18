@@ -4,13 +4,13 @@ import bcrypt from "bcryptjs";
 import generateToken from "../utils/generateToken.js";
 import { getTokenFromHeader } from "../utils/getTokenFromHeader.js";
 import { verifyToken } from "../utils/verifyToken.js";
-
+import path from "path";
 // @desc    Register user
 // @route   POST /api/v1/users/register
 // @access  Private/Admin
 
 export const registerUserCtrl = asyncHandler(async (req, res) => {
-  const { fullname, email, password } = req.body;
+  const { firstname, lastname, mobile, email, password } = req.body;
   //Check user exists
   const userExists = await User.findOne({ email });
   if (userExists) {
@@ -20,11 +20,23 @@ export const registerUserCtrl = asyncHandler(async (req, res) => {
   //hash password
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(password, salt);
+
+  // Get the file path from req.file
+  let userImage = "";
+  if (req.file) {
+    const filePath = req.file ? req.file.path : null;
+    const basePath = "..\\frontend\\public";
+    userImage = path.relative(basePath, filePath);
+  }
+
   //create the user
   const user = await User.create({
-    fullname,
+    firstname,
+    lastname,
+    mobile,
     email,
     password: hashedPassword,
+    userImage,
   });
   res.status(201).json({
     status: "success",
@@ -63,6 +75,19 @@ export const getUserProfileCtrl = asyncHandler(async (req, res) => {
   res.json({
     status: "success",
     message: "User profile fetched successfully",
+    user,
+  });
+});
+
+// @desc    Get user profile
+// @route   GET /api/v1/users/profile
+// @access  Private
+export const getAllUsersCtrl = asyncHandler(async (req, res) => {
+  //find the user
+  const user = await User.find();
+  res.json({
+    status: "success",
+    message: "Users  fetched successfully",
     user,
   });
 });

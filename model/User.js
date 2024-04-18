@@ -3,7 +3,19 @@ const Schema = mongoose.Schema;
 
 const UserShema = new Schema(
   {
-    fullname: {
+    firstname: {
+      type: String,
+      required: true,
+    },
+    lastname: {
+      type: String,
+      required: true,
+    },
+    mobile: {
+      type: String,
+      required: true,
+    },
+    userImage: {
       type: String,
       required: true,
     },
@@ -15,51 +27,14 @@ const UserShema = new Schema(
       type: String,
       required: true,
     },
-    orders: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Order",
-      },
-    ],
-    wishLists: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "WishList",
-      },
-    ],
+
     isAdmin: {
       type: Boolean,
       default: false,
     },
-    hasShippingAddress: {
+    isBlocked: {
       type: Boolean,
       default: false,
-    },
-    shippingAddress: {
-      firstName: {
-        type: String,
-      },
-      lastName: {
-        type: String,
-      },
-      address: {
-        type: String,
-      },
-      city: {
-        type: String,
-      },
-      postalCode: {
-        type: String,
-      },
-      province: {
-        type: String,
-      },
-      country: {
-        type: String,
-      },
-      phone: {
-        type: String,
-      },
     },
   },
   {
