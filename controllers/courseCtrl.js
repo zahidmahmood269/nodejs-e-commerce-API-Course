@@ -100,3 +100,21 @@ export const deleteCourseCtrl = asyncHandler(async (req, res) => {
     message: "Course deleted successfully",
   });
 });
+
+export const getCoursesByMarksCtrl = async (req, res) => {
+  try {
+    const { schoolMarks, otherMarks } = req.body;
+
+    console.log(req.body);
+
+    // Query courses based on schoolMarks and otherMarks criteria
+    const courses = await Courses.find({
+      schoolMarks: { $lte: schoolMarks },
+      otherMarks: { $lte: otherMarks },
+    }).exec();
+
+    res.status(200).json({ success: true, data: courses });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+};
