@@ -7,9 +7,9 @@ import path from "path";
 import dbConnect from "../config/dbConnect.js";
 import { globalErrhandler, notFound } from "../middlewares/globalErrHandler.js";
 
-import productsRouter from "../routes/productsRoute.js";
 import userRoutes from "../routes/usersRoute.js";
 import courseRouter from "../routes/courseRoute.js";
+import courseStudentRouter from "../routes/courseStudentRoute.js";
 
 //db connect
 dbConnect();
@@ -28,7 +28,7 @@ app.use(express.static("public"));
 
 app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/courses", courseRouter);
-app.use("/api/v1/products/", productsRouter);
+app.use("/api/v1/course-student/", courseStudentRouter);
 
 //err middleware
 app.use(notFound);
