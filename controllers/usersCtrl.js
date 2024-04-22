@@ -133,3 +133,12 @@ export const updateShippingAddresctrl = asyncHandler(async (req, res) => {
     user,
   });
 });
+
+export const logoutUserCtrl = asyncHandler(async (req, res) => {
+  // Clear user info from local storage
+  localStorage.removeItem("userInfo");
+  res.json({
+    status: "success",
+    message: "User logged out successfully",
+  });
+});
