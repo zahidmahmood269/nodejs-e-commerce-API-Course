@@ -7,11 +7,11 @@ import CourseStudent from "../model/CourseStudent.js";
 // @access  Private/Admin
 export const createCourseStudentCtrl = asyncHandler(async (req, res) => {
   const { schoolMarks, otherMarks, courseName } = req.body;
-
+  const student = req.userAuthId;
   //CourseStudent exists
-  const courseStudentExists = await CourseStudent.findOne({ courseName });
+  const courseStudentExists = await CourseStudent.findOne({ student });
   if (courseStudentExists) {
-    throw new Error("Course Student Already Exists");
+    throw new Error("Student Course Already Registered");
   }
 
   //create the CourseStudent
@@ -113,5 +113,47 @@ export const deleteCourseStudentCtrl = asyncHandler(async (req, res) => {
   res.json({
     status: "success",
     message: "Course deleted successfully",
+  });
+});
+
+export const countStudentsByCourseNameCtrl = asyncHandler(async (req, res) => {
+  const courseCounts = await CourseStudent.aggregate([
+    {
+      $group: {
+        _id: "$courseName",
+        totalStudents: { $sum: 1 },
+        courseStudents: { $push: "$$ROOT" }, // Push all documents for each courseName
+      },
+    },
+    {
+      $unwind: "$courseStudents", // Unwind the courseStudents array
+    },
+    {
+      $lookup: {
+        from: "users", // Assuming your User model collection name is "users"
+        localField: "courseStudents.user",
+        foreignField: "_id",
+        as: "userDetails",
+      },
+    },
+    {
+      $addFields: {
+        "courseStudents.userDetails": { $arrayElemAt: ["$userDetails", 0] }, // Get the first element of userDetails array
+      },
+    },
+    {
+      $group: {
+        _id: "$_id",
+        totalStudents: { $first: "$totalStudents" },
+        courseStudents: { $push: "$courseStudents" }, // Group courseStudents back into an array
+      },
+    },
+  ]);
+
+  res.json({
+    status: "success",
+    results: courseCounts.length,
+    message: "Total students counted by course name",
+    courseCounts,
   });
 });
